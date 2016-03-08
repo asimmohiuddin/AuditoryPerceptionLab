@@ -5,7 +5,9 @@ public class ReadBuckeye{
     
     Scanner s = new Scanner(new File("BuckeyeWords.txt"));
     double timeLowest = 50000, timeHighest = 0;
+    boolean isConsecutive = true, isNewFile = false;
     int previousID = -1;
+    String sentence = "";
     while (s.hasNextLine()){
       String line = s.nextLine();
       Scanner lineScanner = new Scanner(line);
@@ -20,13 +22,23 @@ public class ReadBuckeye{
       lineScanner.next();
       double timeStart = lineScanner.next().parseDouble();
       double timeEnd = lineScanner.next().parseDouble();
+      if (index < previousID) isNewfile = true;
+      else isNewfile = false;
       if (timeStart < timeLowest) timeLowest = timeStart;
       if ((word.startsWith("<") || word.startsWith("{")) && !(word.startsWith("<HES") ||
          word.startsWith("<CUT") || word.startsWith("<EXT") || word.startsWith("<EXCL"))) {
          timeHighest = timeStart;
-         if (!isConsec
-         System.out.println(fileName + "," + talkerNumber + "," + 
+         if (!isConsecutive) {
+           System.out.println(fileName + "," + talkerNumber + "," + timeLowest + "," + timeHighest + "," + sentence);
+         }
          timeLowest = 50000;
+         isConsecutive = true;
+         sentence = "";
       } else {
         isConsecutive = false;
+        previousID = index;
+        sentence = sentence + " " + word;
       }
+    }
+  }
+}
